@@ -1,0 +1,18 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <h3>Test</h3>
+    <div>        
+        <h3>Light DOM</h3>
+    </div>
+    <script>
+        var root = document.querySelector('div').createShadowRoot();
+        root.innerHTML = '<style>h3{ color: Red; }</style>' +
+            '<h3>Shadow DOM</h3>';
+    </script>
+</body>
+
+</html>
