@@ -34,7 +34,17 @@
         var root = body.createShadowRoot();
         root.innerHTML = '<style>' +
             ':host-context(.different) {' +
-            ' background-color: red;height: 100px; width:100px}'
+            ' background-color: red;height: 100px; width:100px' + 
+            '}' +
+            ':host(x-foo) {' +
+            '/* Applies if the host is a <x-foo> element.*/' +
+            '}' +
+            ':host(x-foo:host) {' +  
+            '/* Same as above. Applies if the host is a <x-foo> element. */' +
+            '}' +
+            ':host(div) {'  +
+            '/* Applies if the host element is a <div>. */' +
+            '}' +
             '</style>';
     </script>
 </body>
