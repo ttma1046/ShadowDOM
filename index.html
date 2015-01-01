@@ -5,7 +5,7 @@
 </head>
 
 <body class="different">
-    <x-foo></x-foo>
+    <!--<x-foo></x-foo>-->
    <!--
     <div>
         <h3>Light DOM</h3>
@@ -29,7 +29,7 @@
             '<content></content>';
     </script>
 -->
-    <script>
+   <!-- <script>
         var body = document.querySelector('body');
         var root = body.createShadowRoot();
         root.innerHTML = '<style>' +
@@ -46,7 +46,45 @@
             '/* Applies if the host element is a <div>. */' +
             '}' +
             '</style>';
-    </script>
+    </script> -->
+
+    <style>
+  #host /deep/ span {
+    color: red;
+  }
+
+ /* x-tabs::shadow x-panel::shadow h2 {
+  ...
+    }
+
+x-tabs /deep/ x-panel {
+  ...
+}
+
+body /deep/ .library-theme {
+  ...
+}
+    */
+</style>
+
+<div id="host">
+  <span>Light DOM</span>
+</div>
+
+<script>
+  var host = document.querySelector('div');
+  var root = host.createShadowRoot();
+  root.innerHTML = "<span>Shadow DOM</span>" + 
+                   "<content></content>";
+
+  // No fun.
+  document.querySelector('x-tabs').shadowRoot
+        .querySelector('x-panel').shadowRoot
+        .querySelector('#foo');
+
+  // Fun.
+  document.querySelector('x-tabs::shadow x-panel::shadow #foo');
+</script>
 </body>
 
 </html>
