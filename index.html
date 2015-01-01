@@ -53,6 +53,15 @@
     color: red;
   }
 
+    /*
+  Styling native elements
+
+  Native HTML controls are a challenge to style. Many people simply give up and roll their own. However, with ::shadow and /deep/, any element in the web platform that uses Shadow DOM can be styled. Great examples are the <input> types and <video>:
+    */
+  video /deep/ input[type="range"] {
+     background: hotpink;
+  }
+
  /* x-tabs::shadow x-panel::shadow h2 {
   ...
     }
