@@ -4,14 +4,27 @@
 </head>
 
 <body>
-    <h3>Test</h3>
-    <div>        
+    <div>
         <h3>Light DOM</h3>
     </div>
     <script>
         var root = document.querySelector('div').createShadowRoot();
-        root.innerHTML = '<style>h3{ color: Red; }</style>' +
+        root.innerHTML = '<style>h3{ color: red; }</style>' +
             '<h3>Shadow DOM</h3>';
+    </script>
+    <style>
+        .red {
+            color: red
+        }
+    </style>
+    <button class="red">My Button</button>
+    <script>
+        var button = document.querySelector('button');
+        var root = button.createShadowRoot();
+        root.innerHTML = '<style>' +
+            ':host { text-transform: uppercase; }' +
+            '</style>' +
+            '<content></content>';
     </script>
 </body>
 
