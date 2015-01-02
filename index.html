@@ -1,10 +1,10 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="css/foundation.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/foundation.css">-->
 </head>
 
-<body class="different">
+<body>
     <!--<x-foo></x-foo>-->
    <!--
     <div>
@@ -48,7 +48,7 @@
             '</style>';
     </script> -->
 
-    <style>
+   <!-- <style>
   #host /deep/ span {
     color: red;
   }
@@ -58,7 +58,7 @@
 
   Native HTML controls are a challenge to style. Many people simply give up and roll their own. However, with ::shadow and /deep/, any element in the web platform that uses Shadow DOM can be styled. Great examples are the <input> types and <video>:
     */
-    
+
   video /deep/ input[type="range"] {
      background: hotpink;
   }
@@ -94,7 +94,41 @@ body /deep/ .library-theme {
 
   // Fun.
   document.querySelector('x-tabs::shadow x-panel::shadow #foo');
+</script>-->
+<!--
+<style>
+  #host {
+    --button-text-color: green;
+    --button-font: "Comic Sans MS", "Comic Sans", cursive;
+  }
+</style>
+<div id="host">Host node</div>
+<script>
+var root = document.querySelector('#host').createShadowRoot();
+root.innerHTML = '<style>' + 
+    'button {' + 
+      'color: var(--button-text-color, pink);' + 
+      'font-family: var(--button-font);' + 
+    '}' +
+    '</style>' +
+    '<content></content>';
 </script>
+
+-->
+
+
+<style type="text/css">
+    :root { --color: blue; }
+    div { --color: green; }
+    #alert { --color: red; }
+    * { color: var(--color); }
+</style>
+<p>I inherited blue from the root element!</p>
+<div>I got green set directly on me!</div>
+<div id='alert'>
+  While I got red set directly on me!
+  <p>I’m red too, because of inheritance!</p>
+</div>
 </body>
 
 </html>
