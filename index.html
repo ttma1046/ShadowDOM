@@ -109,13 +109,13 @@ root.innerHTML = '<style>' +
     'button {' + 
       'color: var(--button-text-color, pink);' + 
       'font-family: var(--button-font);' + 
-    '}' +
+    '}' +   
     '</style>' +
     '<content></content>';
 </script>
 
 -->
-
+<!--
 
 <style type="text/css">
     :root { --color: blue; }
@@ -128,7 +128,34 @@ root.innerHTML = '<style>' +
 <div id='alert'>
   While I got red set directly on me!
   <p>I’m red too, because of inheritance!</p>
+</div>-->
+
+<div>
+  <h3>Light DOM</h3>
+  <section>
+    <div>I'm not underlined</div>
+    <p>I'm underlined in Shadow DOM!</p>
+  </section>
 </div>
+
+<script>
+var div = document.querySelector('div');
+var root = div.createShadowRoot();
+root.innerHTML = '\
+    <style>\
+      h3 { color: red; }\
+      content[select="h3"]::content > h3 {\
+        color: green;\
+      }\
+      ::content section p {\
+        text-decoration: underline;\
+      }\
+    </style>\
+    <h3>Shadow DOM</h3>\
+    <content select="h3"></content>\
+    <content select="section"></content>';
+</script>
+
 </body>
 
 </html>
