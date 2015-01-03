@@ -1,0 +1,261 @@
+<html>
+	<head></head>
+	<body>
+		<!--Instantiating type extension elements
+
+			Instantiating type extension-style custom elements is strikingly close to custom tags.
+
+			Declare them: -->
+
+		<!-- <button> "is a" mega button -->
+
+		<button is="mega-button"></button>
+
+
+		<script type="text/javascript">
+
+			/* Registering new elements */
+			var myapp = {};
+			var XFoo = document.registerElement('x-foo', {
+  				prototype: Object.create(HTMLElement.prototype)
+			});
+
+			/* Create DOM in JS: */
+
+			var megaButton = document.createElement('button', 'mega-button');
+			// megaButton instanceof MegaButton === true
+
+			/* Use the new operator: */
+			var megaButton = new MegaButton();
+			document.body.appendChild(megaButton);
+
+			/* Extending native elements */
+			var MegaButton = document.registerElement('mega-button', {
+  				prototype: Object.create(HTMLButtonElement.prototype),
+  				extends: 'button'
+			});
+
+			/* Adding JS properties and methods */
+
+			/* Extending a custom element */
+			var XFooProto = Object.create(HTMLElement.prototype);
+
+			/* Lifecycle callback methods */
+
+			XFooProto.createdCallback = function() {
+  					this.addEventListener('click', function(e) {
+    				alert('Thanks!');
+  				});
+			};
+			XFooProto.attachedCallback = function() {...};
+			XFooProto.detachedCallback = function() {...};
+			XFooProto.attributeChangedCallback(attrName, oldVal, newVal) = function() {...};
+
+			/* Adding markup */
+			var XFooProto = Object.create(HTMLElement.prototype);
+
+			XFooProto.createdCallback = function() {
+			  this.innerHTML = "<b>I'm an x-foo-with-markup!</b>";
+			};
+
+			var XFoo = document.registerElement('x-foo-with-markup', {prototype: XFooProto});
+
+			/* Encapsulating the internals in Shadow DOM */
+			var XFooProto = Object.create(HTMLElement.prototype);
+
+			XFooProto.createdCallback = function() {
+			  // 1. Attach a shadow root on the element.
+			  var shadow = this.createShadowRoot();
+
+			  // 2. Fill it with markup goodness.
+			  shadow.innerHTML = "<b>I'm in the element's Shadow DOM!</b>";
+			};
+
+			var XFoo = document.registerElement('x-foo-shadowdom', {prototype: XFooProto});
+
+			// 1. Give x-foo a foo() method.
+			XFooProto.foo = function() {
+			  alert('foo() called');
+			};
+
+			// 2. Define a property read-only "bar".
+			Object.defineProperty(XFooProto, "bar", {value: 5});
+
+			// 3. Register x-foo's definition.
+			var XFoo = document.registerElement('x-foo', {prototype: XFooProto});
+
+			// 4. Instantiate an x-foo.
+			var xfoo = document.createElement('x-foo');
+
+			// 5. Add it to the page.
+			document.body.appendChild(xfoo);
+
+			var XFooExtended = document.registerElement('x-foo-extended', {
+			    prototype: XFooProto,
+			    extends: 'x-foo'
+			});
+
+			var XFoo = document.registerElement('x-foo', {
+			  prototype: Object.create(HTMLElement.prototype, {
+			    bar: {
+			      get: function() { return 5; }
+			    },
+			    foo: {
+			      value: function() {
+			        alert('foo() called');
+			      }
+			    }
+			  })
+			});
+
+			/* The first format allows for the use of ES5 Object.defineProperty. The second allows the use of get/set. */
+
+			/*
+			Sorry <randomtag>! You're non-standard and inherit from HTMLUnknownElement.
+
+			The same is not true for custom elements. Elements with valid custom element names inherit from HTMLElement. You can verify this fact by firing up the Console: Ctrl+Shift+J (or Cmd+Opt+J on Mac), and paste in the following lines of code; they return true:
+			*/
+
+			// "tabs" is not a valid custom element name
+			document.createElement('tabs').__proto__ === HTMLUnknownElement.prototype
+
+			// "x-tabs" is a valid custom element name
+			document.createElement('x-tabs').__proto__ == HTMLElement.prototype
+			
+		</script>
+
+		<!-- Instantiating custom tags -->
+
+		<!-- Declare them: -->
+	    <x-foo></x-foo>
+	    <script type="text/javascript">
+			/* Create DOM in JS: */
+			var xFoo = document.createElement('x-foo');
+
+			xFoo.addEventListener('click', function(e) {
+			  alert('Thanks!');
+			});
+
+			/* Use the new operator: */
+			var xFoo = new XFoo();
+			document.body.appendChild(xFoo);
+		</script>
+
+		<!-- Registering an element created from a <template> and Shadow DOM: -->
+
+		<!--These few lines of code pack a lot of punch. Let's understanding everything that is happening:
+
+			We've registered a new element in HTML: <x-foo-from-template>
+			The element's DOM was created from a <template>
+			The element's scary details are hidden away using Shadow DOM
+			Shadow DOM gives the element style encapsulation (e.g. p {color: orange;} isn't turning the entire page orange)
+		-->
+
+		<template id="sdtemplate">
+		  <style>
+		    p { color: orange; }
+		  </style>
+		  <p>I'm in Shadow DOM. My markup was stamped from a &lt;template&gt;.</p>
+		</template>
+
+		<script>
+		var proto = Object.create(HTMLElement.prototype, {
+		  createdCallback: {
+		    value: function() {
+		      var t = document.querySelector('#sdtemplate');
+		      var clone = document.importNode(t.content, true);
+		      this.createShadowRoot().appendChild(clone);
+		    }
+		  }
+		});
+		document.registerElement('x-foo-from-template', {prototype: proto});
+		</script>
+
+		<!-- Styling custom elements
+
+		As with any HTML tag, users of your custom tag can style it with selectors:-->
+
+		<style>
+		  app-panel {
+		    display: flex;
+		  }
+		  [is="x-item"] {
+		    transition: opacity 400ms ease-in-out;
+		    opacity: 0.3;
+		    flex: 1;
+		    text-align: center;
+		    border-radius: 50%;
+		  }
+		  [is="x-item"]:hover {
+		    opacity: 1.0;
+		    background: rgb(255, 0, 255);
+		    color: white;
+		  }
+		  app-panel > [is="x-item"] {
+		    padding: 5px;
+		    list-style: none;
+		    margin: 0 7px;
+		  }
+		</style>
+
+		<app-panel>
+		  <li is="x-item">Do</li>
+		  <li is="x-item">Re</li>
+		  <li is="x-item">Mi</li>
+		</app-panel>
+
+		<h1><strong>In the case of a custom element, the element itself is the host.</strong></h1>
+
+
+		<h1><strong>Unresolved elements</strong></h1>
+
+		<h1><strong>
+			Because custom elements are registered by script using document.registerElement(), they can be declared or created before their definition is registered by the browser. For example, you can declare \<x-tabs\> on the page but end up invoking document.registerElement('x-tabs') much later.
+		</strong></h1>
+
+		<h1><strong>
+			Before elements are upgraded to their definition, they're called unresolved elements. These are HTML elements that have a valid custom element name but haven't been registered.
+		</strong></h1>
+
+		<h1><strong>
+			To mitigate FOUC, custom elements spec out a new CSS pseudo class, :unresolved. Use it to target unresolved elements, right up until the point where the browser invokes your createdCallback() (see lifecycle methods). Once that happens, the element is no longer an unresolved element. The upgrade process is complete and the element has transformed into its definition.
+		</h1><strong>
+
+		<style>
+		  x-foo {
+		    opacity: 1;
+		    transition: opacity 300ms;
+		  }
+		  
+		  x-foo:unresolved {
+		    opacity: 0;
+		  }
+		</style>
+
+		<style>
+		  /* apply a dashed border to all unresolved elements */
+		  :unresolved {
+		    border: 1px dashed red;
+		    display: inline-block;
+		  }
+		  /* x-panel's that are unresolved are red */
+		  x-panel:unresolved {
+		    color: red;
+		  }
+		  /* once the definition of x-panel is registered, it becomes green */
+		  x-panel {
+		    color: green;
+		    display: block;
+		    padding: 5px;
+		    display: block;
+		  }
+		</style>
+
+		<panel>
+		  I'm black because :unresolved doesn't apply to "panel".
+		  It's not a valid custom element name.
+		</panel>
+
+		<x-panel>I'm red because I match x-panel:unresolved.</x-panel>
+	</body>
+</html>

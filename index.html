@@ -1,161 +1,143 @@
 <html>
-
-<head>
+  <head>
     <!--<link rel="stylesheet" type="text/css" href="css/foundation.css">-->
-</head>
-
-<body>
+  </head>
+  <body>
     <!--<x-foo></x-foo>-->
-   <!--
+    <!--
     <div>
-        <h3>Light DOM</h3>
+      <h3>Light DOM</h3>
     </div>
     <script>
-        var root = document.querySelector('div').createShadowRoot();
-        root.innerHTML = '<style>h3{ color: red; }</style>' +
-            '<h3>Shadow DOM</h3>';
+    var root = document.querySelector('div').createShadowRoot();
+    root.innerHTML = '<style>h3{ color: red; }</style>' +
+    '<h3>Shadow DOM</h3>';
     </script>
     -->
     <!--
     <button class="red">My Button</button>
     <script>
-        var button = document.querySelector('button');
-        var root = button.createShadowRoot();
-        root.innerHTML = '<style>' +
-            ':host { opacity: 0.4;transition: opacity 420ms ease-in-out;}' +
-            ':host(:hover) { opacity: 1; }' +
-            ':host(:active) { position: relative;top: 3px;left: 3px; }' +
-            '</style>' +
-            '<content></content>';
+    var button = document.querySelector('button');
+    var root = button.createShadowRoot();
+    root.innerHTML = '<style>' +
+    ':host { opacity: 0.4;transition: opacity 420ms ease-in-out;}' +
+    ':host(:hover) { opacity: 1; }' +
+    ':host(:active) { position: relative;top: 3px;left: 3px; }' +
+    '</style>' +a
+    '<content></content>';
     </script>
--->
-   <!-- <script>
-        var body = document.querySelector('body');
-        var root = body.createShadowRoot();
-        root.innerHTML = '<style>' +
-            ':host-context(.different) {' +
-            ' background-color: red;height: 100px; width:100px' + 
-            '}' +
-            ':host(x-foo) {' +
-            '/* Applies if the host is a <x-foo> element.*/' +
-            '}' +
-            ':host(x-foo:host) {' +  
-            '/* Same as above. Applies if the host is a <x-foo> element. */' +
-            '}' +
-            ':host(div) {'  +
-            '/* Applies if the host element is a <div>. */' +
-            '}' +
-            '</style>';
-    </script> -->
-
-   <!-- <style>
-  #host /deep/ span {
-    color: red;
-  }
-
-    /*
-  Styling native elements
-
-  Native HTML controls are a challenge to style. Many people simply give up and roll their own. However, with ::shadow and /deep/, any element in the web platform that uses Shadow DOM can be styled. Great examples are the <input> types and <video>:
-    */
-
-  video /deep/ input[type="range"] {
-     background: hotpink;
-  }
-
- /* x-tabs::shadow x-panel::shadow h2 {
-  ...
-    }
-
-x-tabs /deep/ x-panel {
-  ...
-}
-
-body /deep/ .library-theme {
-  ...
-}
-    */
-</style>
-
-<div id="host">
-  <span>Light DOM</span>
-</div>
-
-<script>
-  var host = document.querySelector('div');
-  var root = host.createShadowRoot();
-  root.innerHTML = "<span>Shadow DOM</span>" + 
-                   "<content></content>";
-
-  // No fun.
-  document.querySelector('x-tabs').shadowRoot
+    -->
+    <!-- <script>
+    var body = document.querySelector('body');
+    var root = body.createShadowRoot();
+    root.innerHTML = '<style>' +
+    ':host-context(.different) {' +
+    ' background-color: red;height: 100px; width:100px' +
+    '}' +
+    ':host(x-foo) {' +
+    '/* Applies if the host is a <x-foo> element.*/' +
+    '}' +
+    ':host(x-foo:host) {' +
+    '/* Same as above. Applies if the host is a <x-foo> element. */' +
+    '}' +
+    ':host(div) {'  +
+    '/* Applies if the host element is a <div>. */' +
+      '}' +
+      '</style>';
+      </script> -->
+      <!-- <style>
+      #host /deep/ span {
+      color: red;
+      }
+      /*
+      Styling native elements
+      Native HTML controls are a challenge to style. Many people simply give up and roll their own. However, with ::shadow and /deep/, any element in the web platform that uses Shadow DOM can be styled. Great examples are the <input> types and <video>:
+        */
+        video /deep/ input[type="range"] {
+        background: hotpink;
+        }
+        /* x-tabs::shadow x-panel::shadow h2 {
+        ...
+        }
+        x-tabs /deep/ x-panel {
+        ...
+        }
+        body /deep/ .library-theme {
+        ...
+        }
+        */
+        </style>
+        <div id="host">
+          <span>Light DOM</span>
+        </div>
+        <script>
+        var host = document.querySelector('div');
+        var root = host.createShadowRoot();
+        root.innerHTML = "<span>Shadow DOM</span>" +
+        "<content></content>";
+        // No fun.
+        document.querySelector('x-tabs').shadowRoot
         .querySelector('x-panel').shadowRoot
         .querySelector('#foo');
+        // Fun.
+        document.querySelector('x-tabs::shadow x-panel::shadow #foo');
+        </script>-->
+        <!--
+        <style>
+        #host {
+        --button-text-color: green;
+        --button-font: "Comic Sans MS", "Comic Sans", cursive;
+        }
+        </style>
+        <div id="host">Host node</div>
+        <script>
+        var root = document.querySelector('#host').createShadowRoot();
+        root.innerHTML = '<style>' +
+        'button {' +
+        'color: var(--button-text-color, pink);' +
+        'font-family: var(--button-font);' +
+        '}' +
+        '</style>' +
+        '<content></content>';
+        </script>
+        -->
+        <!--
+        <style type="text/css">
+        :root { --color: blue; }
+        div { --color: green; }
+        #alert { --color: red; }
+        * { color: var(--color); }
+        </style>
+        <p>I inherited blue from the root element!</p>
+        <div>I got green set directly on me!</div>
+        <div id='alert'>
+          While I got red set directly on me!
+          <p>I’m red too, because of inheritance!</p>
+        </div>-->
+        <div>
+          <h3>Light DOM</h3>
+          <section>
+            <div>I'm not underlined</div>
+            <p>I'm underlined in Shadow DOM!</p>
+          </section>
+        </div>
 
-  // Fun.
-  document.querySelector('x-tabs::shadow x-panel::shadow #foo');
-</script>-->
-<!--
-<style>
-  #host {
-    --button-text-color: green;
-    --button-font: "Comic Sans MS", "Comic Sans", cursive;
-  }
-</style>
-<div id="host">Host node</div>
-<script>
-var root = document.querySelector('#host').createShadowRoot();
-root.innerHTML = '<style>' + 
-    'button {' + 
-      'color: var(--button-text-color, pink);' + 
-      'font-family: var(--button-font);' + 
-    '}' +   
-    '</style>' +
-    '<content></content>';
-</script>
-
--->
-<!--
-
-<style type="text/css">
-    :root { --color: blue; }
-    div { --color: green; }
-    #alert { --color: red; }
-    * { color: var(--color); }
-</style>
-<p>I inherited blue from the root element!</p>
-<div>I got green set directly on me!</div>
-<div id='alert'>
-  While I got red set directly on me!
-  <p>I’m red too, because of inheritance!</p>
-</div>-->
-
-<div>
-  <h3>Light DOM</h3>
-  <section>
-    <div>I'm not underlined</div>
-    <p>I'm underlined in Shadow DOM!</p>
-  </section>
-</div>
-
-<script>
-var div = document.querySelector('div');
-var root = div.createShadowRoot();
-root.innerHTML = '\
-    <style>\
-      h3 { color: red; }\
-      content[select="h3"]::content > h3 {\
-        color: green;\
-      }\
-      ::content section p {\
-        text-decoration: underline;\
-      }\
-    </style>\
-    <h3>Shadow DOM</h3>\
-    <content select="h3"></content>\
-    <content select="section"></content>';
-</script>
-
-</body>
-
-</html>
+        <script>
+        var div = document.querySelector('div');
+        var root = div.createShadowRoot();
+        root.innerHTML = '\
+          <style>\
+          h3 { color: red; }\
+          content[select="h3"]::content > h3 {\
+          color: green;\
+          }\
+          ::content section p {\
+          text-decoration: underline;\
+          }\
+          </style>\
+          <h3>Shadow DOM</h3>\
+          <content select="h3"></content>\
+          <content select="section"></content>';
+        </script>
+      </body>
+    </html>
