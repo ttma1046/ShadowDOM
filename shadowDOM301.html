@@ -1,0 +1,161 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+<!--
+    <div id="example1">Light DOM</div>
+    <script>
+        var container = document.querySelector('#example1');
+        var root0 = container.createShadowRoot();
+        var root1 = container.createShadowRoot();
+        var root2 = container.createShadowRoot();
+        root0.innerHTML = '<div>Root 0 FTW</div>';
+        root1.innerHTML = '<div>Root 1 FTW</div><content></content>';
+        root2.innerHTML = '<div>Root 2 FTW</div><shadow></shadow>';
+
+        console.log(container.shadowRoot) //true
+
+
+        /* If an element is hosting Shadow DOM you can access its youngest shadow root using .shadowRoot: */
+        var host = document.querySelector('#example1');
+         var root = host.createShadowRoot();
+        console.log(host.shadowRoot === root); // true
+        console.log(document.body.shadowRoot); // null
+
+
+
+        /*
+        If you're worried about people crossing into your shadows, redefine .shadowRoot to be null:
+        */
+
+        Object.defineProperty(host, 'shadowRoot', {
+            get: function () {
+                return null;
+            },
+            set: function (value) {}
+        });
+    </script>
+
+    <div id="example3">
+        <span>Light DOM</span>
+    </div>
+    <script>
+        var container = document.querySelector('#example3');
+        var root1 = container.createShadowRoot();
+        var root2 = container.createShadowRoot();
+
+        var div = document.createElement('div');
+        div.textContent = 'Root 1 FTW';
+        root1.appendChild(div);
+
+         // HTMLContentElement
+        var content = document.createElement('content');
+        content.select = 'span'; // selects any spans the host node contains
+        root1.appendChild(content);
+
+        var div = document.createElement('div');
+        div.textContent = 'Root 2 FTW';
+        root2.appendChild(div);
+
+         // HTMLShadowElement
+        var shadow = document.createElement('shadow');
+        root2.appendChild(shadow);
+    </script>
+
+
+    <!-- Working with insertion points -->
+    <!--
+    <div>
+        <span>Test</span>
+        <h2>Light DOM</h2>
+    </div>
+    <script>
+        var root = document.querySelector('div').createShadowRoot();
+        root.innerHTML = '<content select="h2"></content>';
+
+        var h2 = document.querySelector('h2');
+        console.log(root.querySelector('content[select="h2"] h2')); // null;
+        console.log(root.querySelector('content').contains(h2)); // false
+    </script>
+    -->
+    <div id="example4">
+        <h2>Eric</h2>
+        <h2>Bidelman</h2>
+        <div>Digital Jedi</div>
+        <h4>footer text</h4>
+    </div>
+
+    <template id="sdom">
+        <header>
+            <content select="h2"></content>
+        </header>
+        <section>
+            <content select="div"></content>
+        </section>
+        <footer>
+            <content select="h4"></content>
+        </footer>
+    </template>
+
+    <script>
+        var container = document.querySelector('#example4');
+
+        var root = container.createShadowRoot();
+
+        var t = document.querySelector('#sdom');
+        var clone = document.importNode(t.content, true);
+        root.appendChild(clone);
+
+        var html = [];
+[].forEach.call(root.querySelectorAll('content'), function (el) {
+            html.push(el.outerHTML + ': ');
+            var nodes = el.getDistributedNodes();
+  [].forEach.call(nodes, function (node) {
+                html.push(node.outerHTML);
+            });
+            html.push('\n');
+        });
+    </script>
+    
+    <!-- 
+        <content select="h2"></content>: <h2>Eric</h2><h2>Bidelman</h2>
+        <content select="div"></content>: <div>Digital Jedi</div>
+        <content select="h4:first-of-type"></content>: 
+        -->
+        
+        <div>
+        Element.getDestinationInsertionPoints()
+
+        Similar to .getDistributedNodes(), you can check what insertion points a node is distributed into by calling its .getDestinationInsertionPoints():
+        </div>
+        
+        <div id="host">
+          <h2>Light DOM</h2>
+        </div>
+
+        <script>
+          var container = document.querySelector('div');
+
+          var root1 = container.createShadowRoot();
+          var root2 = container.createShadowRoot();
+          root1.innerHTML = '<content select="h2"></content>';
+          root2.innerHTML = '<shadow></shadow>';
+
+          var h2 = document.querySelector('#host h2');
+          var insertionPoints = h2.getDestinationInsertionPoints();
+          [].forEach.call(insertionPoints, function(contentEl) {
+            console.log(contentEl);
+          });
+        </script>
+
+        <output>
+            <content select="h2"></content>
+            <shadow></shadow>
+            
+        </output>
+</body>
+
+</html>
